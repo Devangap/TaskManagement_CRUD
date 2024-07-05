@@ -22,7 +22,7 @@ public class deletetask extends HttpServlet {
         String idtasks = req.getParameter("taskId");
         System.out.println("Retrieved Task ID: " + idtasks);
 
-        // Get the userid from the session
+        // Get the user ID from the session
         HttpSession session = req.getSession(false);
 
         Connection con = null;
@@ -35,23 +35,24 @@ public class deletetask extends HttpServlet {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jsp", "root", "020510Dev#T");
 
             // Prepare SQL statement to delete the task
-            PreparedStatement pt = con.prepareStatement("DELETE FROM tasks WHERE idtasks = ? ");
+            PreparedStatement pt = con.prepareStatement("DELETE FROM tasks WHERE idtasks = ?");
             pt.setString(1, idtasks);
-
 
             // Execute update
             int rc = pt.executeUpdate();
 
             if (rc > 0) {
-                // Redirect to displaytaskservlet to refresh the task list
-                resp.sendRedirect("displaytaskservlet?status=deletesuccess");
+                // Redirect to the home page (home.jsp) after successful deletion
+                resp.sendRedirect("home.jsp?status=deletesuccess");
             } else {
-                resp.sendRedirect("displaytaskservlet?status=deletefail");
+                // Redirect to the home page (home.jsp) with delete failure status
+                resp.sendRedirect("home.jsp?status=deletefail");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendRedirect("displaytaskservlet?status=error");
+            // Redirect to the home page (home.jsp) with error status
+            resp.sendRedirect("home.jsp?status=error");
         } finally {
             if (con != null) {
                 try {

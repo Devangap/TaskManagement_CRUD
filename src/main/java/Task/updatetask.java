@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -30,6 +29,7 @@ public class updatetask extends HttpServlet {
         String dbPassword = "020510Dev#T";
 
         try (Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            // SQL query to update the task
             String sql = "UPDATE tasks SET title = ?, date = ?, priority = ?, description = ? WHERE idtasks = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, taskTitle);
@@ -49,7 +49,7 @@ public class updatetask extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Redirect to the display tasks servlet
-        response.sendRedirect("displaytaskservlet");
+        // Redirect to the home.jsp page
+        response.sendRedirect("home.jsp");
     }
 }
