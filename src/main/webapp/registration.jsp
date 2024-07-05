@@ -1,0 +1,168 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #fafafa;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #f06;
+            outline: none;
+            box-shadow: 0 0 8px rgba(240, 6, 6, 0.3);
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #ffba08;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #f06;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .login-link a {
+            color: #f06;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+            function validatePasswords() {
+                var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("confirmpassword").value;
+
+                if (password !== confirmPassword) {
+                    document.getElementById("password-error").innerText = "Passwords do not match!";
+                    return false;
+                }
+                return true;
+            }
+        </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form action="register" method="post">
+            <label for="fullname">Username</label>
+            <input type="text" id="fullname" name="fullname" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirmpassword">Confirm Password</label>
+            <input type="password" id="confirmpassword" name="confirmpassword" required>
+
+            <input type="submit" value="Register">
+        </form>
+        <div class="login-link">
+            Already registered? <a href="Login.jsp">Login</a>
+        </div>
+    </div>
+    <script>
+        <% if (request.getAttribute("status") != null) { %>
+            var status = "<%= request.getAttribute("curstatus") %>";
+            if (status === "success") {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Registration completed successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } else if (status === "fail") {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Registration failed. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        <% } %>
+    </script>
+    <%
+            String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+        %>
+            <script type="text/javascript">
+                showAlert("<%= errorMessage %>");
+            </script>
+        <%
+            }
+        %>
+</body>
+</html>
