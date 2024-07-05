@@ -135,7 +135,7 @@
                 text-align: center;
                 animation: fadeIn 1s ease-in-out;
                 transition: filter 0.3s ease-in-out; /* Added for background blur effect */
-                margin-top: 80px; /* Space below navbar */
+                margin-top: 100px; /* Space below navbar */
                 margin-bottom: 20px; /* Space above task table */
             }
             .container2 {
@@ -392,7 +392,7 @@
        <div class="navbar-right">
            <span class="username">Welcome, <%= session.getAttribute("username") %></span>
 
-           <a href="displaytaskservlet" class="logout-button">View Tasks</a>
+
            <a class="logout-button" href="logout">Logout</a>
        </div>
    </div>

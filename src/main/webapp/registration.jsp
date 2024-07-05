@@ -79,6 +79,12 @@
             font-size: 14px;
             color: #333;
         }
+        .error {
+                    color: red;
+                    font-size: 12px;
+                    margin-top: -10px;
+                    margin-bottom: 10px;
+                }
 
         .login-link a {
             color: #f06;
@@ -100,40 +106,88 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-            function validatePasswords() {
+            function validateForm() {
+                var fullname = document.getElementById("fullname").value.trim();
+                var email = document.getElementById("email").value.trim();
                 var password = document.getElementById("password").value;
                 var confirmPassword = document.getElementById("confirmpassword").value;
 
-                if (password !== confirmPassword) {
-                    document.getElementById("password-error").innerText = "Passwords do not match!";
-                    return false;
+                var isValid = true;
+
+                // Validate Full Name
+                if (fullname === "") {
+                    showError("fullname", "Username is required.");
+                    isValid = false;
+                } else {
+                    clearError("fullname");
                 }
-                return true;
+
+                // Validate Email
+                var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailPattern.test(email)) {
+                    showError("email", "Invalid email address.");
+                    isValid = false;
+                } else {
+                    clearError("email");
+                }
+
+
+                // Validate Confirm Password
+                if (password !== confirmPassword) {
+                    showError("confirmpassword", "Passwords do not match.");
+                    isValid = false;
+                } else {
+                    clearError("confirmpassword");
+                }
+
+                return isValid;
+            }
+
+            function showError(elementId, message) {
+                var element = document.getElementById(elementId);
+                element.style.borderColor = "#f06";
+                var errorElement = document.getElementById(elementId + "-error");
+                if (!errorElement) {
+                    errorElement = document.createElement("div");
+                    errorElement.id = elementId + "-error";
+                    errorElement.className = "error";
+                    element.parentNode.insertBefore(errorElement, element.nextSibling);
+                }
+                errorElement.innerText = message;
+            }
+
+            function clearError(elementId) {
+                var element = document.getElementById(elementId);
+                element.style.borderColor = "#ddd";
+                var errorElement = document.getElementById(elementId + "-error");
+                if (errorElement) {
+                    errorElement.innerText = "";
+                }
             }
         </script>
 </head>
 <body>
-    <div class="container">
-        <h2>Register</h2>
-        <form action="register" method="post">
-            <label for="fullname">Username</label>
-            <input type="text" id="fullname" name="fullname" required>
+   <div class="container">
+           <h2>Register</h2>
+           <form action="register" method="post" onsubmit="return validateForm();">
+               <label for="fullname">Username</label>
+               <input type="text" id="fullname" name="fullname" >
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+               <label for="email">Email</label>
+               <input type="email" id="email" name="email" >
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+               <label for="password">Password</label>
+               <input type="password" id="password" name="password" >
 
-            <label for="confirmpassword">Confirm Password</label>
-            <input type="password" id="confirmpassword" name="confirmpassword" required>
+               <label for="confirmpassword">Confirm Password</label>
+               <input type="password" id="confirmpassword" name="confirmpassword" >
 
-            <input type="submit" value="Register">
-        </form>
-        <div class="login-link">
-            Already registered? <a href="Login.jsp">Login</a>
-        </div>
-    </div>
+               <input type="submit" value="Register">
+           </form>
+           <div class="login-link">
+               Already registered? <a href="Login.jsp">Login</a>
+           </div>
+       </div>
     <script>
         <% if (request.getAttribute("status") != null) { %>
             var status = "<%= request.getAttribute("curstatus") %>";
