@@ -42,7 +42,7 @@
             color: #555;
         }
 
-        input[type="text"], input[type="email"], input[type="password"] {
+        input[type="text"], input[type="email"], input[type="password"] ,input[type="file"]{
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 15px;
@@ -52,7 +52,7 @@
             font-size: 14px;
         }
 
-        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus ,input[type="file"]:focus {
             border-color: #f06;
             outline: none;
             box-shadow: 0 0 8px rgba(240, 6, 6, 0.3);
