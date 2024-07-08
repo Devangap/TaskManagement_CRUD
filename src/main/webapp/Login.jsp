@@ -73,16 +73,17 @@
         input[type="submit"]:hover {
             background-color: #f06;
         }
+
         .registration-link {
-                    margin-top: 20px;
-                    font-size: 14px;
-                    color: #333;
-                }
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
 
         .registration-link a {
-                    color: #f06;
-                    text-decoration: none;
-                    font-weight: bold;
+            color: #f06;
+            text-decoration: none;
+            font-weight: bold;
         }
 
         @keyframes fadeIn {
@@ -114,28 +115,31 @@
         <p>Don't have an account? <a href="registration.jsp">Sign up</a></p>
     </div>
     <script>
-        <% if (request.getAttribute("status") != null) { %>
-            var status = "<%= request.getAttribute("status") %>";
-            if (status === "success") {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Login successful.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'home.jsp';
-                    }
-                });
-            } else if (status === "fail") {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Login failed. Please check your credentials and try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        <% } %>
+        document.addEventListener('DOMContentLoaded', function() {
+            <% if (session.getAttribute("status") != null) { %>
+                var status = "<%= session.getAttribute("status") %>";
+                if (status === "success") {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Login successful.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'home.jsp';
+                        }
+                    });
+                } else if (status === "fail") {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Login failed. Please check your credentials and try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+                <% session.removeAttribute("status"); %>
+            <% } %>
+        });
     </script>
 </body>
 </html>

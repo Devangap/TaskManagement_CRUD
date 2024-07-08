@@ -363,35 +363,7 @@
         }
 
         // Example usage to fetch useriduserinfo by username
-        getUserIdByUsername('<%= session.getAttribute("username") %>');
-         function loadTasks() {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', 'displaytaskservlet', true); // Use the correct servlet URL
-                    xhr.setRequestHeader('Accept', 'application/json');
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                            var tasks = JSON.parse(xhr.responseText);
-                            var taskTableBody = document.querySelector('.task-table tbody');
-                            taskTableBody.innerHTML = ''; // Clear existing rows
 
-                            tasks.forEach(function(task) {
-                                var row = '<tr>' +
-                                    '<td>' + task.title + '</td>' +
-                                    '<td>' + task.date + '</td>' +
-                                    '<td>' + task.priority + '</td>' +
-                                    '<td>' + task.description + '</td>' +
-                                    '</tr>';
-                                taskTableBody.innerHTML += row;
-                            });
-                        }
-                    };
-                    xhr.send();
-                }
-
-                // Load tasks when the page is loaded
-                document.addEventListener('DOMContentLoaded', function() {
-                    loadTasks();
-                });
     </script>
 </head>
 <body>
