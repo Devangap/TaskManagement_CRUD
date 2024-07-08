@@ -141,7 +141,10 @@
                 }
 
                 return isValid;
+
+
             }
+
 
             function showError(elementId, message) {
                 var element = document.getElementById(elementId);
@@ -169,7 +172,7 @@
 <body>
    <div class="container">
            <h2>Register</h2>
-           <form action="register" method="post" onsubmit="return validateForm();">
+           <form action="register" method="post" enctype="multipart/form-data" onsubmit="return validateForm(); ">
                <label for="fullname">Username</label>
                <input type="text" id="fullname" name="fullname" >
 
@@ -181,6 +184,9 @@
 
                <label for="confirmpassword">Confirm Password</label>
                <input type="password" id="confirmpassword" name="confirmpassword" >
+
+               <label for="profilePicture">Upload Picture</label>
+               <input type="file" id="profilePicture" name="profilePicture">
 
                <input type="submit" value="Register">
            </form>
