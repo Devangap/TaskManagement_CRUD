@@ -38,9 +38,10 @@ public class loginservlet extends HttpServlet {
             // Execute query
             ResultSet rs = pt.executeQuery();
             if (rs.next()) {
-                // Set username in session
+                // Set user details in session
                 session.setAttribute("username", rs.getString("username"));
                 session.setAttribute("userid", rs.getString("iduserinfo"));
+                session.setAttribute("profilePicture", rs.getString("picture")); // Add profile picture to session
                 session.setAttribute("status", "success");
                 dispatcher = req.getRequestDispatcher("home.jsp");
             } else {

@@ -70,6 +70,12 @@
     <meta charset="UTF-8">
     <title>Welcome to Taskpro</title>
      <style>
+     .profile-picture {
+                 width: 40px;
+                 height: 40px;
+                 border-radius: 50%;
+                 margin-right: 10px;
+             }
             body {
                 font-family: 'Arial', sans-serif;
                 background: #fafafa;
@@ -113,6 +119,8 @@
                 font-size: 16px;
                 color: white;
                 margin-left: 10px;
+                margin-right:20px;
+                 margin-bottom:10px;
             }
 
             .navbar .navbar-right .logout-button:hover {
@@ -122,6 +130,7 @@
             .navbar .navbar-right .username {
                 color: #fff;
                 margin-right: 20px;
+                margin-bottom:10px;
                 font-size: 16px;
             }
 
@@ -390,10 +399,12 @@
    <div class="navbar">
        <a class="navbar-brand" href="#">Taskpro</a>
        <div class="navbar-right">
+
            <span class="username">Welcome, <%= session.getAttribute("username") %></span>
 
 
            <a class="logout-button" href="logout">Logout</a>
+           <img src="uploads/<%= session.getAttribute("profilePicture") %>" alt="Profile Picture" class="profile-picture">
        </div>
    </div>
 
