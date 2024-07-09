@@ -209,7 +209,7 @@
                 top: 10%; /* Adjust top position */
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(255, 255, 255, 0.9);
+                background: #ffffff; /* No transparency */
                 padding: 20px;
                 border-radius: 8px;
                 z-index: 1000;
@@ -219,6 +219,7 @@
                 animation: fadeIn 0.5s ease-in-out;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
+
 
             .task-form input,
             .task-form textarea,
@@ -294,6 +295,13 @@
                 background-color: #e31b0c;
             }
 
+            .error {
+                        color: red;
+                        font-size: 12px;
+                        margin-top: -10px;
+                        margin-bottom: 10px;
+                    }
+
             @keyframes fadeIn {
                 from {
                     opacity: 0;
@@ -318,6 +326,82 @@
             }
         </style>
     <script>
+
+    function validateForm() {
+        const taskTitle = document.getElementById('taskTitle').value;
+        const taskDate = document.getElementById('taskDate').value;
+        const priority = document.getElementById('priority').value;
+        const description = document.getElementById('description').value;
+
+        var isValid = true;
+       if (taskTitle === "") {
+                showError("taskTitle", "Task title is required.");
+                isValid = false;
+            } else {
+                clearError("taskTitle");
+            }
+
+
+        if (taskDate === "") {
+                showError("taskDate", "Task date is required.");
+                isValid = false;
+            } else {
+                clearError("taskDate");
+            }
+
+        if (priority === "") {
+                showError("priority", "Priority is required.");
+                isValid = false;
+            } else {
+                clearError("priority");
+            }
+
+
+        if (description === "") {
+                showError("description", "Profile picture is required.");
+                isValid = false;
+            } else {
+                clearError("description");
+            }
+
+            return isValid;
+
+
+    }
+    function showError(elementId, message) {
+                var element = document.getElementById(elementId);
+                element.style.borderColor = "#f06";
+                var errorElement = document.getElementById(elementId + "-error");
+                if (!errorElement) {
+                    errorElement = document.createElement("div");
+                    errorElement.id = elementId + "-error";
+                    errorElement.className = "error";
+                    element.parentNode.insertBefore(errorElement, element.nextSibling);
+                }
+                errorElement.innerText = message;
+            }
+
+            function clearError(elementId) {
+                var element = document.getElementById(elementId);
+                element.style.borderColor = "#ddd";
+                var errorElement = document.getElementById(elementId + "-error");
+                if (errorElement) {
+                    errorElement.innerText = "";
+                }
+            }
+
+            function clearErrorOnFocus() {
+                var elements = ["taskTitle","taskDate","priority", "description"];
+                elements.forEach(function(id) {
+                    document.getElementById(id).addEventListener("focus", function() {
+                        clearError(id);
+                    });
+                });
+            }
+
+            window.onload = function() {
+                clearErrorOnFocus();
+            };
      function showEditTaskForm(taskId, title, date, priority, description) {
                         document.getElementById('edittaskForm').style.display = 'block';
                         document.querySelector('.container').classList.add('blur');
@@ -353,15 +437,12 @@
                    // Do nothing or handle cancellation
                }
            }
-           document.addEventListener('DOMContentLoaded', (event) => {
-                   const today = new Date().toISOString().split('T')[0];
-                   document.getElementById('taskDate').setAttribute('min', today);
-               });
+          document.addEventListener('DOMContentLoaded', (event) => {
+              const today = new Date().toISOString().split('T')[0];
+              document.getElementById('taskDate').setAttribute('min', today);
+              document.getElementById('taskDateInput').setAttribute('min', today);
+          });
 
-           document.addEventListener('DOMContentLoaded', (event) => {
-                     const today = new Date().toISOString().split('T')[0];
-                     document.getElementById('"taskDateInput"').setAttribute('min', today);
-                 });
 
 
 
@@ -430,15 +511,15 @@
     <!-- Task Form -->
     <div id="taskForm" class="task-form">
         <h2>Add a Task</h2>
-        <form action="addtask" method="post">
+        <form action="addtask" method="post" onsubmit="return validateForm()" >
             <label for="taskTitle" style="display: block; margin-bottom: 5px; margin-left: 20px;">Task Title</label>
-            <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Title" required><br>
+            <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Title" maxlength="30"><br>
 
             <label for="taskDate" style="display: block; margin-bottom: 5px; margin-left: 20px;">Task Date</label>
-            <input type="date" id="taskDate" name="taskDate" placeholder="Task Date" required><br>
+            <input type="date" id="taskDate" name="taskDate" placeholder="Task Date"><br>
 
             <label for="priority" style="display: block; margin-bottom: 5px; margin-left: 20px;">Priority:</label>
-            <select id="priority" name="priority" style="margin-left: 20px;" required>
+            <select id="priority" name="priority" style="margin-left: 20px;" >
                 <option value="" disabled selected>Select Priority</option>
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
@@ -450,7 +531,7 @@
 
 
             <label for="description" style="display: block; margin-bottom: 5px; margin-left: 20px;">Description</label>
-            <textarea id="description" name="description" rows="4" placeholder="Description"></textarea><br>
+            <textarea id="description" name="description" rows="4" placeholder="Description" maxlength="100"></textarea><br>
 
             <button type="submit" class="taskpro-button">Submit</button>
             <button type="button" onclick="hideTaskForm()" class="taskpro-button">Cancel</button>
@@ -462,10 +543,10 @@
                 <input type="hidden" id="taskIdInput" name="taskId">
 
                 <label for="taskTitleInput">Task Title:</label><br>
-                <input type="text" id="taskTitleInput" name="taskTitle" placeholder="Task Title" required><br>
+                <input type="text" id="taskTitleInput" name="taskTitle" placeholder="Task Title" maxlength="30"><br>
 
                 <label for="taskDateInput">Task Date:</label><br>
-                <input type="date" id="taskDateInput" name="taskDate" placeholder="Task Date" required><br>
+                <input type="date" id="taskDateInput" name="taskDate" placeholder="Task Date" ><br>
 
                <label for="priorityInput">Priority:</label><br>
                <select id="priorityInput" name="priority" required>
@@ -478,7 +559,7 @@
                </select><br>
 
                 <label for="descriptionInput">Description:</label><br>
-                <textarea id="descriptionInput" name="description" rows="4" placeholder="Description"></textarea><br>
+                <textarea id="descriptionInput" name="description" rows="4" placeholder="Description" maxlength="100"></textarea><br>
 
                 <button type="submit">Save</button>
                 <button type="button" onclick="hideeditTaskForm()">Cancel</button>

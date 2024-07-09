@@ -202,7 +202,7 @@
        <h2>Register</h2>
        <form action="register" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
            <label for="fullname">Username</label>
-           <input type="text" id="fullname" name="fullname">
+           <input type="text" id="fullname" name="fullname" maxlength="30">
            <div id="fullname-error" class="error"></div>
 
            <label for="email">Email</label>
@@ -210,11 +210,11 @@
            <div id="email-error" class="error"></div>
 
            <label for="password">Password</label>
-           <input type="password" id="password" name="password">
+           <input type="password" id="password" name="password" maxlength="10">
            <div id="password-error" class="error"></div>
 
            <label for="confirmpassword">Confirm Password</label>
-           <input type="password" id="confirmpassword" name="confirmpassword">
+           <input type="password" id="confirmpassword" name="confirmpassword" maxlength="10">
            <div id="confirmpassword-error" class="error"></div>
 
            <label for="profilePicture">Upload Profile Picture</label>
