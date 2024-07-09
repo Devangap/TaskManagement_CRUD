@@ -120,7 +120,7 @@
                 color: white;
                 margin-left: 10px;
                 margin-right:20px;
-                 margin-bottom:10px;
+                margin-bottom:10px !important;
             }
 
             .navbar .navbar-right .logout-button:hover {
@@ -221,7 +221,8 @@
             }
 
             .task-form input,
-            .task-form textarea {
+            .task-form textarea,
+            .task-form select{
                 width: calc(100% - 20px);
                 margin: 10px;
                 padding: 8px;
@@ -317,7 +318,7 @@
             }
         </style>
     <script>
-     function showeditTaskForm(taskId, title, date, priority, description) {
+     function showEditTaskForm(taskId, title, date, priority, description) {
                         document.getElementById('edittaskForm').style.display = 'block';
                         document.querySelector('.container').classList.add('blur');
                         document.getElementById('taskIdInput').value = taskId;
@@ -325,7 +326,7 @@
                         document.getElementById('taskDateInput').value = date;
                         document.getElementById('priorityInput').value = priority;
                         document.getElementById('descriptionInput').value = description;
-                    }
+             }
 
                     function hideeditTaskForm() {
                         document.getElementById('edittaskForm').style.display = 'none';
@@ -344,25 +345,29 @@
             document.querySelector('.container').classList.remove('blur');
         }
 
-        // Function to get useriduserinfo by username using AJAX
-        function getUserIdByUsername(username) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'GetUserIdServlet', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var iduserinfo = xhr.responseText;
-                        document.getElementById('useridSpan').textContent = 'ID: ' + iduserinfo;
-                    } else {
-                        console.error('Error:', xhr.status, xhr.statusText);
-                    }
-                }
-            };
-            xhr.send('username=' + encodeURIComponent(username));
-        }
+       function confirmDelete(taskId) {
+               var confirmation = confirm("Are you sure that you want to delete?");
+               if (confirmation) {
+                   window.location.href = 'deletetask?taskId=' + taskId;
+               } else {
+                   // Do nothing or handle cancellation
+               }
+           }
+           document.addEventListener('DOMContentLoaded', (event) => {
+                   const today = new Date().toISOString().split('T')[0];
+                   document.getElementById('taskDate').setAttribute('min', today);
+               });
 
-        // Example usage to fetch useriduserinfo by username
+           document.addEventListener('DOMContentLoaded', (event) => {
+                     const today = new Date().toISOString().split('T')[0];
+                     document.getElementById('"taskDateInput"').setAttribute('min', today);
+                 });
+
+
+
+
+
+
 
     </script>
 </head>
@@ -388,37 +393,33 @@
     </div>
     <div class="container2">
     <h2>Your Tasks</h2>
-    <table class="task-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Date</th>
-                        <th>Priority</th>
-                        <th>Description</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        for (Task task : tasks) {
-                    %>
-                    <tr>
-                        <td><%= task.getTaskId() %></td>
-                        <td><%= task.getTitle() %></td>
-                        <td><%= task.getDate() %></td>
-                        <td><%= task.getPriority() %></td>
-                        <td><%= task.getDescription() %></td>
-                        <td>
-                             <button onclick="showeditTaskForm('<%= task.getTaskId() %>', '<%= task.getTitle() %>', '<%= task.getDate() %>', '<%= task.getPriority() %>', '<%= task.getDescription() %>')" class="action-button edit-button">Edit</button>
-                             <a href='deletetask?taskId=<%= task.getTaskId() %>' class='action-button delete-button'>Delete</a>
-                        </td>
-                    </tr>
-                    <%
-                        }
-                    %>
-                </tbody>
-            </table>
+   <table class="task-table">
+       <thead>
+           <tr>
+               <th>ID</th>
+               <th>Title</th>
+               <th>Date</th>
+               <th>Priority</th>
+               <th>Description</th>
+               <th>Action</th>
+           </tr>
+       </thead>
+       <tbody>
+           <% for (Task task : tasks) { %>
+           <tr>
+               <td><%= task.getTaskId() %></td>
+               <td><%= task.getTitle() %></td>
+               <td><%= task.getDate() %></td>
+               <td><%= task.getPriority() %></td>
+               <td><%= task.getDescription() %></td>
+               <td>
+                   <button onclick="showEditTaskForm('<%= task.getTaskId() %>', '<%= task.getTitle() %>', '<%= task.getDate() %>', '<%= task.getPriority() %>', '<%= task.getDescription() %>')" class="action-button edit-button">Edit</button>
+                   <a href="javascript:void(0);" onclick="confirmDelete('<%= task.getTaskId() %>');" class="action-button delete-button">Delete</a>
+               </td>
+           </tr>
+           <% } %>
+       </tbody>
+   </table>
              </div>
 
 
@@ -436,8 +437,17 @@
             <label for="taskDate" style="display: block; margin-bottom: 5px; margin-left: 20px;">Task Date</label>
             <input type="date" id="taskDate" name="taskDate" placeholder="Task Date" required><br>
 
-            <label for="priority" style="display: block; margin-bottom: 5px; margin-left: 20px;">Priority</label>
-            <input type="text" id="priority" name="priority" placeholder="Priority" required><br>
+            <label for="priority" style="display: block; margin-bottom: 5px; margin-left: 20px;">Priority:</label>
+            <select id="priority" name="priority" style="margin-left: 20px;" required>
+                <option value="" disabled selected>Select Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+                <option value="Routine">Routine</option>
+                <option value="No Priority">No Priority</option>
+            </select><br>
+
+
 
             <label for="description" style="display: block; margin-bottom: 5px; margin-left: 20px;">Description</label>
             <textarea id="description" name="description" rows="4" placeholder="Description"></textarea><br>
@@ -457,8 +467,15 @@
                 <label for="taskDateInput">Task Date:</label><br>
                 <input type="date" id="taskDateInput" name="taskDate" placeholder="Task Date" required><br>
 
-                <label for="priorityInput">Priority:</label><br>
-                <input type="text" id="priorityInput" name="priority" placeholder="Priority" required><br>
+               <label for="priorityInput">Priority:</label><br>
+               <select id="priorityInput" name="priority" required>
+                   <option value="" disabled selected>Select Priority</option>
+                   <option value="High">High</option>
+                   <option value="Medium">Medium</option>
+                   <option value="Low">Low</option>
+                   <option value="Routine">Routine</option>
+                   <option value="No Priority">No Priority</option>
+               </select><br>
 
                 <label for="descriptionInput">Description:</label><br>
                 <textarea id="descriptionInput" name="description" rows="4" placeholder="Description"></textarea><br>

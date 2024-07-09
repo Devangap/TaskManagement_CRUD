@@ -74,13 +74,13 @@
             background-color: #f06;
         }
 
-        .registration-link {
+        .login-link {
             margin-top: 20px;
             font-size: 14px;
             color: #333;
         }
 
-        .registration-link a {
+        .login-link a {
             color: #f06;
             text-decoration: none;
             font-weight: bold;
@@ -112,7 +112,9 @@
 
             <input type="submit" value="Login">
         </form>
+         <div class="login-link">
         <p>Don't have an account? <a href="registration.jsp">Sign up</a></p>
+        </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -42,12 +42,13 @@ public class addtask extends HttpServlet {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jsp", "root", "020510Dev#T");
 
             // Prepare SQL statement
-            PreparedStatement pt = con.prepareStatement("INSERT INTO tasks (title, date, priority, description, userid) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement pt = con.prepareStatement("INSERT INTO tasks (title, date, priority, description, userid, status) VALUES (?, ?, ?, ?, ?, ?)");
             pt.setString(1, title);
             pt.setString(2, date);
             pt.setString(3, priority);
             pt.setString(4, description);
             pt.setString(5, userid);
+            pt.setString(6, "Incomplete"); // Default status as "Incomplete"
 
             // Execute update
             int rc = pt.executeUpdate();
