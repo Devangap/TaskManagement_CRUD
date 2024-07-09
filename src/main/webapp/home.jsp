@@ -376,7 +376,7 @@
 
 
            <a class="logout-button" href="logout">Logout</a>
-           <img src="uploads/<%= session.getAttribute("profilePicture") %>" alt="Profile Picture" class="profile-picture">
+           <img src="uploads/<%= session.getAttribute("profilePicture") %>" alt="Profile Picture" class="profile-picture" onclick="showProfilePicture()">
        </div>
    </div>
 
