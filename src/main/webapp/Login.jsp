@@ -24,7 +24,7 @@
             max-width: 380px;
             width: 100%;
             text-align: center;
-            animation: fadeIn 1s ease-in-out;
+
         }
 
         h2 {
@@ -103,12 +103,12 @@
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form action="LoginServlet" method="post">
+        <form action="LoginServlet" method="post" onsubmit= "return validateForm();">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" >
 
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password">
 
             <input type="submit" value="Login">
         </form>
@@ -117,6 +117,64 @@
         </div>
     </div>
     <script>
+    function validateForm() {
+                var fullname = document.getElementById("username").value.trim();
+                var password = document.getElementById("password").value;
+
+                var isValid = true;
+
+                // Validate Full Name
+                if (fullname === "") {
+                    showError("username", "Username is required.");
+                    isValid = false;
+                } else {
+                    clearError("username");
+                }
+
+                // Validate Password
+                if (password === "") {
+                    showError("password", "Password is required.");
+                    isValid = false;
+                } else {
+                    clearError("password");
+                }
+}
+
+            function showError(elementId, message) {
+                var element = document.getElementById(elementId);
+                element.style.borderColor = "#f06";
+                var errorElement = document.getElementById(elementId + "-error");
+                if (!errorElement) {
+                    errorElement = document.createElement("div");
+                    errorElement.id = elementId + "-error";
+                    errorElement.className = "error";
+                    element.parentNode.insertBefore(errorElement, element.nextSibling);
+                }
+                errorElement.innerText = message;
+            }
+
+            function clearError(elementId) {
+                var element = document.getElementById(elementId);
+                element.style.borderColor = "#ddd";
+                var errorElement = document.getElementById(elementId + "-error");
+                if (errorElement) {
+                    errorElement.innerText = "";
+                }
+            }
+
+            function clearErrorOnFocus() {
+                var elements = ["username", "password"];
+                elements.forEach(function(id) {
+                    document.getElementById(id).addEventListener("focus", function() {
+                        clearError(id);
+                    });
+                });
+            }
+
+            window.onload = function() {
+                clearErrorOnFocus();
+            };
+
         document.addEventListener('DOMContentLoaded', function() {
             <% if (session.getAttribute("status") != null) { %>
                 var status = "<%= session.getAttribute("status") %>";
@@ -125,7 +183,10 @@
                         title: 'Success!',
                         text: 'Login successful.',
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        showConfirmButton: true,
+                        backdrop: false
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = 'home.jsp';
@@ -136,7 +197,10 @@
                         title: 'Error!',
                         text: 'Login failed. Please check your credentials and try again.',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        showConfirmButton: true,
+                        backdrop: false
                     });
                 }
                 <% session.removeAttribute("status"); %>

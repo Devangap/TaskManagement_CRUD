@@ -1,6 +1,5 @@
 package Repository;
 
-
 import DB_connection.DBConnection;
 import Model.Task;
 import java.sql.Connection;
@@ -11,7 +10,9 @@ public class taskrepo {
 
     public boolean saveTask(Task task) {
         boolean isSuccess = false;
-        try (Connection con = DBConnection.getConnection()) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
             String query = "INSERT INTO tasks (title, date, priority, description, userid, status) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pt = con.prepareStatement(query)) {
                 pt.setString(1, task.getTitle());
@@ -24,13 +25,23 @@ public class taskrepo {
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return isSuccess;
     }
 
     public boolean deleteTask(int taskId) {
         boolean isSuccess = false;
-        try (Connection con = DBConnection.getConnection()) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
             String query = "DELETE FROM tasks WHERE idtasks = ?";
             try (PreparedStatement pt = con.prepareStatement(query)) {
                 pt.setInt(1, taskId);
@@ -38,13 +49,23 @@ public class taskrepo {
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return isSuccess;
     }
 
     public boolean updateTask(int taskId, String title, String date, String priority, String description) {
         boolean isSuccess = false;
-        try (Connection con = DBConnection.getConnection()) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
             String query = "UPDATE tasks SET title = ?, date = ?, priority = ?, description = ? WHERE idtasks = ?";
             try (PreparedStatement pt = con.prepareStatement(query)) {
                 pt.setString(1, title);
@@ -56,8 +77,15 @@ public class taskrepo {
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return isSuccess;
     }
 }
-
