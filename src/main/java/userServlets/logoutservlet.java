@@ -1,4 +1,4 @@
-package registration;
+package userServlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

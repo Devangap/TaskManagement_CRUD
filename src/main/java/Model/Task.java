@@ -1,4 +1,4 @@
-package Task;
+package Model;
 
 public class Task {
     private int idtasks;

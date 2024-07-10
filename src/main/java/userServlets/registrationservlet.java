@@ -1,4 +1,7 @@
-package registration;
+package userServlets;
+
+import Model.User;
+import Service.userservice;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -10,14 +13,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 @WebServlet("/register")
 @MultipartConfig
 public class registrationservlet extends HttpServlet {
+    private userservice userService;
+
+    @Override
+    public void init() {
+        userService = new userservice();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,20 +34,21 @@ public class registrationservlet extends HttpServlet {
         String confirmPassword = req.getParameter("confirmpassword");
         Part filePart = req.getPart("profilePicture");
         RequestDispatcher dispatcher = null;
-        Connection con = null;
 
         if (!password.equals(confirmPassword)) {
             req.setAttribute("errorMessage", "Passwords do not match!");
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
             return;
         }
+
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
+
         String fileName = filePart.getSubmittedFileName();
-        if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) {
+        if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png") && !fileName.endsWith(".JPG")) {
             req.setAttribute("errorMessage", "Only JPG or PNG images are allowed!");
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
             return;
@@ -61,49 +67,17 @@ public class registrationservlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        User user = new User(username, email, password, fileName);
 
+        boolean isRegistered = userService.registerUser(user);
 
-
-        PrintWriter out = resp.getWriter();
-        out.print(username);
-        out.print(email);
-        out.print(password);
-
-        try {
-            // Load MySQL JDBC Driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Establish the connection
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jsp", "root", "020510Dev#T");
-
-            // Prepare SQL statement
-            PreparedStatement pt = con.prepareStatement("INSERT INTO userinfo (username, email, password,picture) VALUES (?, ?, ?,?)");
-            pt.setString(1, username);
-            pt.setString(2, email);
-            pt.setString(3, password);
-            pt.setString(4, fileName);
-
-            // Execute update
-            int rc = pt.executeUpdate();
+        if (isRegistered) {
             dispatcher = req.getRequestDispatcher("Login.jsp");
-
-            if (rc > 0) {
-                req.setAttribute("curstatus", "success");
-            } else {
-                req.setAttribute("curstatus", "fail");
-            }
-            dispatcher.forward(req, resp);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            req.setAttribute("curstatus", "success");
+        } else {
+            dispatcher = req.getRequestDispatcher("registration.jsp");
+            req.setAttribute("curstatus", "fail");
         }
+        dispatcher.forward(req, resp);
     }
 }

@@ -3547,7 +3547,7 @@
     </mime-mapping>
     <mime-mapping>
         <extension>setreg</extension>
-        <mime-type>application/set-registration-initiation</mime-type>
+        <mime-type>application/set-userServlets-initiation</mime-type>
     </mime-mapping>
     <mime-mapping>
         <extension>sfd-hdstx</extension>

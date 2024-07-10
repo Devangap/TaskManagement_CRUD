@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ page import="Task.Task, java.util.List" %>
+    <%@ page import="Model.Task, java.util.List" %>
     <%@ page import="java.sql.*, java.util.*" %>
-    <%@ page import="Task.Task" %>
+
 
     <%
         // Check if the user is logged in
@@ -11,7 +11,7 @@
             return;
         }
 
-        String userid = (String) session.getAttribute("userid");
+         Integer userid = (Integer) session.getAttribute("userid");
 
         // Database connection parameters
         String dbURL = "jdbc:mysql://localhost:3306/jsp";
@@ -27,7 +27,7 @@
 
             String sql = "SELECT * FROM tasks WHERE userid = ?";
             PreparedStatement pt = con.prepareStatement(sql);
-            pt.setString(1, userid);
+            pt.setInt(1, userid);
 
             ResultSet rs = pt.executeQuery();
 
