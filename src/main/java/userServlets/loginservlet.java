@@ -1,7 +1,5 @@
-package userServlets;
-
-import Model.User;
-import Service.userservice;
+import java.io.IOException;
+import java.util.Date;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -10,8 +8,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
+import Model.User;
+import Model.ErrorModel;
+import Service.userservice;
 
 @WebServlet("/LoginServlet")
 public class loginservlet extends HttpServlet {
@@ -29,17 +28,35 @@ public class loginservlet extends HttpServlet {
         HttpSession session = req.getSession();
         RequestDispatcher dispatcher = null;
 
-        User user = userService.validateUser(username, password);
-        if (user != null) {
+        ErrorModel errorModel = userService.login(username, password);
+
+        if (errorModel.getSuccess() != null) {
+            // User authenticated successfully
+            User user = userService.validateUser(username, password); // Fetch user details
+
+            // Update last login time
+            user.setLastLogin(new Date()); // Set current timestamp
+
+            // Update user in the database
+            userService.updateUser(user); // Implement updateUser method in userService
+
+            // Set session attributes
             session.setAttribute("username", user.getUsername());
             session.setAttribute("userid", user.getId());
             session.setAttribute("profilePicture", user.getPicture());
             session.setAttribute("status", "success");
+
+            // Pass user details to home.jsp
+            req.setAttribute("user", user); // This makes 'user' available in home.jsp
             dispatcher = req.getRequestDispatcher("home.jsp");
         } else {
+            // Authentication failed
             session.setAttribute("status", "fail");
+            req.setAttribute("errorModel", errorModel); // Pass errorModel to Login.jsp
             dispatcher = req.getRequestDispatcher("Login.jsp");
         }
+
+        // Forward the request and response to the appropriate page
         dispatcher.forward(req, resp);
     }
 }

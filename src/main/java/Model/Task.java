@@ -2,14 +2,12 @@ package Model;
 
 public class Task {
     private int idtasks;
-    private int username;
-
+    private String username; // Changed to String type
 
     private String title;
     private String date;
     private String priority;
     private String description;
-
     private String status;
 
     public String getStatus() {
@@ -20,11 +18,11 @@ public class Task {
         this.status = status;
     }
 
-    public int getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(int username) {
+    public void setUsername(String username) { // Changed parameter type to String
         this.username = username;
     }
 
@@ -36,7 +34,7 @@ public class Task {
         this.description = description;
     }
 
-    // Getters and setters
+    // Getters and setters for other fields
     public int getTaskId() {
         return idtasks;
     }

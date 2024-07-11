@@ -1,11 +1,14 @@
 package Model;
 
+import java.util.Date;
+
 public class User {
     private int id;
     private String username;
     private String email;
     private String password;
     private String picture;
+    private Date lastLogin; // New field to store last login time
 
     public User() {}
 
@@ -15,6 +18,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.picture = picture;
+
     }
 
     public User(String username, String email, String password, String picture) {
@@ -63,5 +67,13 @@ public class User {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 }

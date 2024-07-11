@@ -3,10 +3,7 @@ package Repository;
 import DB_connection.DBConnection;
 import Model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class userrepo {
     public User validateUser(String username, String password) {
@@ -114,4 +111,33 @@ public class userrepo {
 
         return iduserinfo;
     }
+    public void updateUser(User user) {
+        Connection con = null;
+        PreparedStatement pt = null;
+
+        try {
+            con = DBConnection.getConnection();
+            String query = "UPDATE userinfo SET lastLogin = ? WHERE iduserinfo = ?";
+            pt = con.prepareStatement(query);
+
+            pt.setTimestamp(1, new Timestamp(user.getLastLogin().getTime()));
+            pt.setInt(2, user.getId());
+
+            pt.executeUpdate();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

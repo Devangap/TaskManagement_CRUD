@@ -1,6 +1,7 @@
 package taskServlet;
 
 import Model.Task;
+import Model.ErrorModel;
 import Service.TaskService;
 
 import jakarta.servlet.RequestDispatcher;
@@ -34,27 +35,31 @@ public class addtask extends HttpServlet {
 
         // Get the userid from the session
         HttpSession session = req.getSession(false);
-        Integer userid = (Integer) session.getAttribute("userid"); // Retrieve as Integer
+        Integer userid = (Integer) session.getAttribute("userid");
 
-        if (userid == null) {
-            resp.sendRedirect("Login.jsp"); // Redirect to login page if userid is not found in session
-            return;
-        }
+        // Convert userid to String
+        String useridStr = String.valueOf(userid);
 
         // Create a Task object
         Task task = new Task(0, title, date, priority, description);
-        task.setUsername(userid); // Assign userid to the task
+        task.setUsername(useridStr); // Set the userid as String
+
+        // Check if task title already exists
+        ErrorModel errorModel = taskService.addTask(task);
 
         // Initialize dispatcher for forwarding
         RequestDispatcher dispatcher;
-        boolean isTaskAdded = taskService.addTask(task);
         dispatcher = req.getRequestDispatcher("home.jsp");
 
-        if (isTaskAdded) {
-            req.setAttribute("curstatus", "success");
-        } else {
+        // Set attributes based on the result
+        if (errorModel.getError() != null) {
             req.setAttribute("curstatus", "fail");
+            req.setAttribute("errorMessage", errorModel.getError());
+        } else {
+            req.setAttribute("curstatus", "success");
+            req.setAttribute("successMessage", errorModel.getSuccess());
         }
+
         dispatcher.forward(req, resp);
     }
 }
