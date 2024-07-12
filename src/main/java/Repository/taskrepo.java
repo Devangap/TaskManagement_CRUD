@@ -14,9 +14,10 @@ public class taskrepo {
         boolean titleExists = false;
         try {
             con = DBConnection.getConnection(); // Get connection from DBConnection class
-            String query = "SELECT COUNT(*) AS count FROM tasks WHERE title = ?";
+            String query = "SELECT COUNT(*) AS count FROM tasks WHERE title = ? ";
             PreparedStatement stmt = con.prepareStatement(query);
             stmt.setString(1, title);
+
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt("count");

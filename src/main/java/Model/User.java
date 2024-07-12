@@ -8,9 +8,15 @@ public class User {
     private String email;
     private String password;
     private String picture;
-    private Date lastLogin; // New field to store last login time
+    private Date lastLogin;
+    private int loginAttempts;
+    private String status;
 
-    public User() {}
+    public User() {
+        this.lastLogin = new Date();
+        this.loginAttempts = 0;
+        this.status = "active";
+    }
 
     public User(int id, String username, String email, String password, String picture) {
         this.id = id;
@@ -18,7 +24,9 @@ public class User {
         this.email = email;
         this.password = password;
         this.picture = picture;
-
+        this.lastLogin = new Date();
+        this.loginAttempts = 0;
+        this.status = "active";
     }
 
     public User(String username, String email, String password, String picture) {
@@ -26,6 +34,9 @@ public class User {
         this.email = email;
         this.password = password;
         this.picture = picture;
+        this.lastLogin = new Date();
+        this.loginAttempts = 0;
+        this.status = "active";
     }
 
     // Getters and setters
@@ -75,5 +86,21 @@ public class User {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public int getLoginAttempts() {
+        return loginAttempts;
+    }
+
+    public void setLoginAttempts(int loginAttempts) {
+        this.loginAttempts = loginAttempts;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

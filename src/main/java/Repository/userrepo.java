@@ -28,13 +28,13 @@ public class userrepo {
                         rs.getString("password"),
                         rs.getString("picture")
                 );
+                user.setLoginAttempts(rs.getInt("loginattempts"));
+                user.setStatus(rs.getString("status"));
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-
             try {
-
                 if (con != null) {
                     con.close();
                 }
@@ -68,7 +68,6 @@ public class userrepo {
             return false;
         } finally {
             try {
-
                 if (con != null) {
                     con.close();
                 }
@@ -98,9 +97,7 @@ public class userrepo {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-
             try {
-
                 if (con != null) {
                     con.close();
                 }
@@ -111,26 +108,27 @@ public class userrepo {
 
         return iduserinfo;
     }
+
     public void updateUser(User user) {
         Connection con = null;
         PreparedStatement pt = null;
 
         try {
             con = DBConnection.getConnection();
-            String query = "UPDATE userinfo SET lastLogin = ? WHERE iduserinfo = ?";
+            String query = "UPDATE userinfo SET lastLogin = ?, loginattempts = ?, status = ? WHERE iduserinfo = ?";
             pt = con.prepareStatement(query);
 
             pt.setTimestamp(1, new Timestamp(user.getLastLogin().getTime()));
-            pt.setInt(2, user.getId());
+            pt.setInt(2, user.getLoginAttempts());
+            pt.setString(3, user.getStatus());
+            pt.setInt(4, user.getId());
 
             pt.executeUpdate();
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-
             try {
-
                 if (con != null) {
                     con.close();
                 }
@@ -140,4 +138,42 @@ public class userrepo {
         }
     }
 
+    public User findUserByUsername(String username) {
+        User user = null;
+        Connection con = null;
+        PreparedStatement pt = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBConnection.getConnection();
+            String query = "SELECT * FROM userinfo WHERE username = ?";
+            pt = con.prepareStatement(query);
+            pt.setString(1, username);
+
+            rs = pt.executeQuery();
+            if (rs.next()) {
+                user = new User(
+                        rs.getInt("iduserinfo"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("picture")
+                );
+                user.setLoginAttempts(rs.getInt("loginattempts"));
+                user.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }
 }

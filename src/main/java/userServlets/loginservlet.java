@@ -1,3 +1,5 @@
+package userServlets;
+
 import java.io.IOException;
 import java.util.Date;
 
@@ -38,7 +40,7 @@ public class loginservlet extends HttpServlet {
             user.setLastLogin(new Date()); // Set current timestamp
 
             // Update user in the database
-            userService.updateUser(user); // Implement updateUser method in userService
+            userService.updateUser(user);
 
             // Set session attributes
             session.setAttribute("username", user.getUsername());
@@ -50,8 +52,11 @@ public class loginservlet extends HttpServlet {
             req.setAttribute("user", user); // This makes 'user' available in home.jsp
             dispatcher = req.getRequestDispatcher("home.jsp");
         } else {
-            // Authentication failed
-            session.setAttribute("status", "fail");
+            if ("Account is inactive due to multiple failed login attempts.".equals(errorModel.getError())) {
+                session.setAttribute("status", "inactive");
+            } else {
+                session.setAttribute("status", "fail");
+            }
             req.setAttribute("errorModel", errorModel); // Pass errorModel to Login.jsp
             dispatcher = req.getRequestDispatcher("Login.jsp");
         }

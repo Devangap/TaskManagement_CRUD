@@ -27,6 +27,8 @@
         }
     %>
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
  function logMessages() {
@@ -377,6 +379,7 @@
         </style>
     <script>
 
+
     function validateForm() {
         const taskTitle = document.getElementById('taskTitle').value;
         const taskDate = document.getElementById('taskDate').value;
@@ -597,11 +600,55 @@
                       }
                   }
 
-
-
+                     document.addEventListener('DOMContentLoaded', function() {
+                             <% if (session.getAttribute("curstatus") != null) { %>
+                                 var curstatus = "<%= session.getAttribute("curstatus") %>";
+                                 if (curstatus === "success") {
+                                     Swal.fire({
+                                         title: 'Success!',
+                                         text: '<%= session.getAttribute("successMessage") %>',
+                                         icon: 'success',
+                                         confirmButtonText: 'OK',
+                                         position: 'center',
+                                         showConfirmButton: true,
+                                         backdrop: false
+                                     }).then((result) => {
+                                         if (result.isConfirmed) {
+                                             <% session.removeAttribute("curstatus"); %>
+                                             <% session.removeAttribute("successMessage"); %>
+                                             <% session.removeAttribute("errorMessage"); %>
+                                             window.location.href = 'home.jsp';
+                                         }
+                                     });
+                                 } else if (curstatus === "fail") {
+                                     Swal.fire({
+                                         title: 'Error!',
+                                         text: 'Task title already exists.',
+                                         icon: 'error',
+                                         confirmButtonText: 'OK',
+                                         position: 'center',
+                                         showConfirmButton: true,
+                                         backdrop: false
+                                     }).then((result) => {
+                                         if (result.isConfirmed) {
+                                             <% session.removeAttribute("curstatus"); %>
+                                             <% session.removeAttribute("successMessage"); %>
+                                             <% session.removeAttribute("errorMessage"); %>
+                                         }
+                                     });
+                                 }
+                             <% } %>
+                         });
     </script>
 </head>
 <body>
+ <div id="messageContainer">
+        <% if (request.getAttribute("curstatus") != null && request.getAttribute("curstatus").equals("success")) { %>
+            <div class="success">${successMessage}</div>
+        <% } %>
+    </div>
+
+
 
    <% if ("success".equals(request.getAttribute("curstatus"))) { %>
            <div class="alert alert-success">

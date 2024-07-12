@@ -175,37 +175,48 @@
                 clearErrorOnFocus();
             };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            <% if (session.getAttribute("status") != null) { %>
-                var status = "<%= session.getAttribute("status") %>";
-                if (status === "success") {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Login successful.',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        position: 'center',
-                        showConfirmButton: true,
-                        backdrop: false
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'home.jsp';
+                document.addEventListener('DOMContentLoaded', function() {
+                    <% if (session.getAttribute("status") != null) { %>
+                        var status = "<%= session.getAttribute("status") %>";
+                        if (status === "success") {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Login successful.',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                position: 'center',
+                                showConfirmButton: true,
+                                backdrop: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = 'home.jsp';
+                                }
+                            });
+                        } else if (status === "fail") {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Login failed. Please check your credentials and try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                position: 'center',
+                                showConfirmButton: true,
+                                backdrop: false
+                            });
+                        } else if (status === "inactive") {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Your account is inactive due to multiple failed login attempts. Please contact support.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                position: 'center',
+                                showConfirmButton: true,
+                                backdrop: false
+                            });
                         }
-                    });
-                } else if (status === "fail") {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Login failed. Please check your credentials and try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        position: 'center',
-                        showConfirmButton: true,
-                        backdrop: false
-                    });
-                }
-                <% session.removeAttribute("status"); %>
-            <% } %>
-        });
+                        <% session.removeAttribute("status"); %>
+                    <% } %>
+                });
+
     </script>
 </body>
 </html>

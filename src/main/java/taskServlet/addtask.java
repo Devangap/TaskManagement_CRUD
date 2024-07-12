@@ -47,19 +47,17 @@ public class addtask extends HttpServlet {
         // Check if task title already exists
         ErrorModel errorModel = taskService.addTask(task);
 
-        // Initialize dispatcher for forwarding
-        RequestDispatcher dispatcher;
-        dispatcher = req.getRequestDispatcher("home.jsp");
-
         // Set attributes based on the result
         if (errorModel.getError() != null) {
-            req.setAttribute("curstatus", "fail");
-            req.setAttribute("errorMessage", errorModel.getError());
+            session.setAttribute("curstatus", "fail");
+            session.setAttribute("errorMessage", errorModel.getError());
+            System.out.println("Error: " + errorModel.getError()); // Print the error in the console
         } else {
-            req.setAttribute("curstatus", "success");
-            req.setAttribute("successMessage", errorModel.getSuccess());
+            session.setAttribute("curstatus", "success");
+            session.setAttribute("successMessage", errorModel.getSuccess());
         }
 
-        dispatcher.forward(req, resp);
+        // Redirect to home.jsp
+        resp.sendRedirect("home.jsp");
     }
 }
